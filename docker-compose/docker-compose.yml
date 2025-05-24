@@ -1,0 +1,103 @@
+services:
+  configserver:
+    image: "ankitdev/configserver:s8"
+    container_name: configserver-ms
+    ports:
+      - "8071:8071"
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+
+  eurekaserver:
+    image: "ankitdev/eurekaserver:s8"
+    container_name: eurekaserver-ms
+    ports:
+      - "8070:8070"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaserver"
+
+  products:
+    image: "ankitdev/products:s8"
+    container_name: products-ms
+    ports:
+      - "8080:8080"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "products"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+  orders:
+    image: "ankitdev/orders:s8"
+    container_name: orders-ms
+    ports:
+      - "8090:8090"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "orders"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+  carts:
+    image: "ankitdev/carts:s8"
+    container_name: carts-ms
+    ports:
+      - "8091:8091"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "carts"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+  users:
+    image: "ankitdev/users:s8"
+    container_name: users-ms
+    ports:
+      - "8092:8092"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "users"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+networks:
+  ankitdev:
+    driver: "bridge"
