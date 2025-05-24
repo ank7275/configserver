@@ -1,6 +1,6 @@
 services:
   configserver:
-    image: "ankitdev/configserver:s8"
+    image: "ankitdev/configserver:v1"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -15,7 +15,7 @@ services:
       service: microservice-base-config
 
   eurekaserver:
-    image: "ankitdev/eurekaserver:s8"
+    image: "ankitdev/eurekaserver:v1"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -35,7 +35,7 @@ services:
       SPRING_APPLICATION_NAME: "eurekaserver"
 
   products:
-    image: "ankitdev/products:s8"
+    image: "ankitdev/products:v1"
     container_name: products-ms
     ports:
       - "8080:8080"
@@ -51,7 +51,7 @@ services:
       service: microservice-eureka-config
 
   orders:
-    image: "ankitdev/orders:s8"
+    image: "ankitdev/orders:v1"
     container_name: orders-ms
     ports:
       - "8090:8090"
@@ -67,7 +67,7 @@ services:
       service: microservice-eureka-config
 
   carts:
-    image: "ankitdev/carts:s8"
+    image: "ankitdev/carts:v1"
     container_name: carts-ms
     ports:
       - "8091:8091"
@@ -83,7 +83,7 @@ services:
       service: microservice-eureka-config
 
   users:
-    image: "ankitdev/users:s8"
+    image: "ankitdev/users:v1"
     container_name: users-ms
     ports:
       - "8092:8092"
